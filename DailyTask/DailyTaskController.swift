@@ -10,7 +10,7 @@ import UIKit
 
 class DailyTaskController: UITableViewController {
 
-    let itemArray = ["Work On 22 HALO", "FINISH APP DESIGN COURSE", "Workout", "Typing Lessons", "F/P"]
+    var itemArray = ["Work On 22 HALO", "FINISH APP DESIGN COURSE", "Workout", "Typing Lessons", "F/P"]
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -44,4 +44,54 @@ class DailyTaskController: UITableViewController {
         tableView.deselectRow(at: indexPath, animated: true)
         
     }
+    
+    //ADDING NEW ITEMS TO THE LIST
+    
+    
+    @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
+        
+        var textField = UITextField()
+        
+        let alertMessage = UIAlertController(title: "Add Item", message: "", preferredStyle: .alert)
+        
+        let action = UIAlertAction(title: "Add Item", style: .default) { (action) in
+            //To occur when the user clicks the add item button
+            
+            self.itemArray.append(textField.text!)
+            
+            self.tableView.reloadData()
+        }
+        
+        alertMessage.addTextField { (alertTextField) in
+            alertTextField.placeholder = "Add Item To List"
+            print(alertTextField.text)
+            textField = alertTextField
+        }
+   
+        alertMessage.addAction(action)
+        
+        present(alertMessage, animated: true, completion: nil)
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 }
