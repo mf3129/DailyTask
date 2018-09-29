@@ -10,10 +10,16 @@ import UIKit
 
 class DailyTaskController: UITableViewController {
 
+    let defaults = UserDefaults.standard
+    
+    
     var itemArray = ["Work On 22 HALO", "FINISH APP DESIGN COURSE", "Workout", "Typing Lessons", "F/P"]
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        
+        if let items = defaults.array(forKey: "itemArrayList") as? [String] {
+            itemArray = items
+        }
     }
 
 //MARK - TableView Datasource Methods
@@ -58,6 +64,8 @@ class DailyTaskController: UITableViewController {
             //To occur when the user clicks the add item button
             
             self.itemArray.append(textField.text!)
+            
+            self.defaults.set(self.itemArray, forKey: "itemArrayList")
             
             self.tableView.reloadData()
         }
