@@ -9,15 +9,16 @@
 import UIKit
 
 class DailyTaskController: UITableViewController {
-
-    let defaults = UserDefaults.standard
     
     var itemArray = [Item]()
     
+    let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Items.plist")
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        
+        print(dataFilePath)
         
         let newItem = Item()
         newItem.title = "Work On 22 HALO"
@@ -35,9 +36,9 @@ class DailyTaskController: UITableViewController {
         newItem4.title = "Hello"
         itemArray.append(newItem4)
         
-        if let items = defaults.array(forKey: "itemArrayList") as? [Item] {
-            itemArray = items
-        }
+//        if let items = defaults.array(forKey: "itemArrayList") as? [Item] {
+//            itemArray = items
+//        }
         
     }
 
@@ -79,13 +80,14 @@ class DailyTaskController: UITableViewController {
         
         itemArray[indexPath.row].done = !itemArray[indexPath.row].done
         
+        saveItemData()
+        
 //        if itemArray[indexPath.row].done == false { //REPLACED THIS CODE WITH THE CODE ABOVE.
 //            itemArray[indexPath.row].done = true
 //        } else {
 //            itemArray[indexPath.row].done = false
 //        }
         
-        tableView.reloadData()
         tableView.deselectRow(at: indexPath, animated: true)
         
     }
@@ -107,10 +109,9 @@ class DailyTaskController: UITableViewController {
             newItem.title = textField.text!
             
             self.itemArray.append(newItem)
-
-            self.defaults.set(self.itemArray, forKey: "itemArrayList")
             
-            self.tableView.reloadData() 
+            self.saveItemData()
+
         }
         
         
@@ -127,6 +128,21 @@ class DailyTaskController: UITableViewController {
         
     }
     
+    
+    
+    func saveItemData() {
+        
+        let encoder = PropertyListEncoder()
+        
+        do {
+            let data = try encoder.encode(itemArray)
+            try data.write(to: dataFilePath!)
+        } catch {
+            print("Error encoding Item Array, \(error)")
+        }
+        
+        self.tableView.reloadData()
+    }
     
   }
 
