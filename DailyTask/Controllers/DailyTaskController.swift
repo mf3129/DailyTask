@@ -13,13 +13,18 @@ class DailyTaskController: UITableViewController {
     
     var itemArray = [Item]()
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    var selectedCategory : Categories? {
+        didSet{
+            loadItems()
+        }
+    }
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
         
-        loadItems()
 //        if let items = defaults.array(forKey: "itemArrayList") as? [Item] {
 //            itemArray = items
 //        }
@@ -93,6 +98,7 @@ class DailyTaskController: UITableViewController {
             
             let newItem = Item(context: self.context)
             newItem.title = textField.text!
+            newItem.parentCategory = self.selectedCategory
             newItem.done = false
             
             self.itemArray.append(newItem)
@@ -119,7 +125,6 @@ class DailyTaskController: UITableViewController {
     
     func saveItemData() {
         
-        
         do {
             try context.save()
         } catch {
@@ -129,10 +134,17 @@ class DailyTaskController: UITableViewController {
         self.tableView.reloadData()
     }
     
-    
-    
-    func loadItems(with request: NSFetchRequest<Item> = Item.fetchRequest()) {
-    
+    func loadItems(with request: NSFetchRequest<Item> = Item.fetchRequest(), predicate : NSPredicate? = nil) {
+        
+        let categoryPredicate = NSPredicate(format: "parentCategory.name MATCHES %@", selectedCategory!.name!)
+        
+        if let additionalPredicate = predicate {
+            request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [categoryPredicate, additionalPredicate])
+        } else {
+            request.predicate = categoryPredicate
+        }
+        
+        
         do {
             itemArray = try context.fetch(request)
         } catch {
@@ -140,9 +152,9 @@ class DailyTaskController: UITableViewController {
         }
         
         tableView.reloadData()
+        
     }
     
-
 
 }
 
@@ -152,12 +164,11 @@ extension DailyTaskController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         let request : NSFetchRequest<Item> = Item.fetchRequest()
         
-        request.predicate = NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text!)
+        let predicate = NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text!)
         
         request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
         
-        
-        loadItems(with: request)
+        loadItems(with: request, predicate: predicate)
         
     }
     
@@ -167,7 +178,7 @@ extension DailyTaskController: UISearchBarDelegate {
             self.loadItems()
             
             DispatchQueue.main.async {
-                searchBar.resignFirstResponder() 
+                searchBar.resignFirstResponder()
             }
         }
     }
