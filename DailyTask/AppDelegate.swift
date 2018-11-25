@@ -22,8 +22,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         do {
             let realm = try Realm()
-            }
-        } catch {
+        }
+        catch {
             print("Error intialising new realm, \(error)")
         }
         
@@ -66,5 +66,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
 
-}
 
+
+}
+ 

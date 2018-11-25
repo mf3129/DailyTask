@@ -13,9 +13,9 @@ class DailyTaskController: UITableViewController {
     
     var itemArray = [Item]()
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
-    var selectedCategory : Categories? {
+    var selectedCategory : Category? {
         didSet{
-            loadItems()
+           // loadItems()
         }
     }
     
@@ -96,13 +96,12 @@ class DailyTaskController: UITableViewController {
             //To occur when the user clicks the add item button
             
             
-            let newItem = Item(context: self.context)
-            newItem.title = textField.text!
-            newItem.parentCategory = self.selectedCategory
-            newItem.done = false
-            
-            self.itemArray.append(newItem)
-            
+//            let newItem = Item(value: self.context)
+//            newItem.title = textField.text!
+//            newItem.parentCategory = self.selectedCategory
+//            newItem.done = false
+//            self.itemArray.append(newItem)
+//
             self.saveItemData()
 
         }
@@ -134,53 +133,53 @@ class DailyTaskController: UITableViewController {
         self.tableView.reloadData()
     }
     
-    func loadItems(with request: NSFetchRequest<Item> = Item.fetchRequest(), predicate : NSPredicate? = nil) {
-        
-        let categoryPredicate = NSPredicate(format: "parentCategory.name MATCHES %@", selectedCategory!.name!)
-        
-        if let additionalPredicate = predicate {
-            request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [categoryPredicate, additionalPredicate])
-        } else {
-            request.predicate = categoryPredicate
-        }
-        
-        
-        do {
-            itemArray = try context.fetch(request)
-        } catch {
-            print("Error catching data from context \(error)")
-        }
-        
-        tableView.reloadData()
-        
-    }
+//    func loadItems(with request: NSFetchRequest<Item> = Item.fetchRequest(), predicate : NSPredicate? = nil) {
+//
+////        let categoryPredicate = NSPredicate(format: "parentCategory.name MATCHES %@", selectedCategory!.name!)
+////
+////        if let additionalPredicate = predicate {
+////            request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [categoryPredicate, additionalPredicate])
+////        } else {
+////            request.predicate = categoryPredicate
+////        }
+////
+////
+////        do {
+////            itemArray = try context.fetch(request)
+////        } catch {
+////            print("Error catching data from context \(error)")
+////        }
+////
+////        tableView.reloadData()
+//
+//    }
     
 
 }
 
 //MARK: - Search Bar Methods
-extension DailyTaskController: UISearchBarDelegate {
-    
-    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        let request : NSFetchRequest<Item> = Item.fetchRequest()
-        
-        let predicate = NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text!)
-        
-        request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
-        
-        loadItems(with: request, predicate: predicate)
-        
-    }
-    
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        
-        if searchBar.text?.count == 0 {
-            self.loadItems()
-            
-            DispatchQueue.main.async {
-                searchBar.resignFirstResponder()
-            }
-        }
-    }
-    
-}
+//extension DailyTaskController: UISearchBarDelegate {
+//
+//    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+//        let request : NSFetchRequest<Item> = Item.fetchRequest()
+//
+//        let predicate = NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text!)
+//
+//        request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
+//
+//        loadItems(with: request, predicate: predicate)
+//
+//    }
+//
+//    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+//
+//        if searchBar.text?.count == 0 {
+//            self.loadItems()
+//
+//            DispatchQueue.main.async {
+//                searchBar.resignFirstResponder()
+//            }
+//        }
+//    }
+//
+//}
