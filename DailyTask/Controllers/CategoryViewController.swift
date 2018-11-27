@@ -15,8 +15,7 @@ class CategoryViewController: UITableViewController {
     let realm = try! Realm()
     
     
-    var itemArrays = [Category]()
-    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    var itemArrays: Results<Category>?
     
     
     override func viewDidLoad() {
@@ -30,7 +29,7 @@ class CategoryViewController: UITableViewController {
         //MARK: TableView Datasource Methods
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return itemArrays.count
+        return itemArrays?.count ?? 1 // NIL COALESCING OPERATOR
     }
     
     
@@ -38,9 +37,8 @@ class CategoryViewController: UITableViewController {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "categoryCell", for: indexPath)
         
-        let categoryItem = itemArrays[indexPath.row]
         
-        cell.textLabel?.text = categoryItem.name
+        cell.textLabel?.text = itemArrays?[indexPath.row].name ?? "No Categories Added Yet"
         
         return cell
         
@@ -61,8 +59,6 @@ class CategoryViewController: UITableViewController {
             
             let newItem = Category()
             newItem.name = textField.text!
-            
-            self.itemArrays.append(newItem)
             
             self.save(category: newItem)
             
@@ -90,7 +86,7 @@ class CategoryViewController: UITableViewController {
         let destinationVC = segue.destination as! DailyTaskController
         
         if let indexPath = tableView.indexPathForSelectedRow {
-            destinationVC.selectedCategory = itemArrays[indexPath.row]
+            destinationVC.selectedCategory = itemArrays?[indexPath.row]
         }
     }
     
@@ -112,14 +108,16 @@ class CategoryViewController: UITableViewController {
     
     func loadCategory() {
         
-//        let request: NSFetchRequest<Categories> = Categories.fetchRequest()
-////        do {
-////            itemArrays = try context.fetch(request)
-////        } catch {
-////            print("Error catching data from context \(error)")
-////        }
-////
-////        tableView.reloadData()
+        itemArrays = realm.objects(Category.self)
+        
+         tableView.reloadData()
+        
+//        let request: NSFetchRequest<Categories> = Categories.fetchRequest()  ORIGINAL FOR CORE DATA
+//        do {
+//            itemArrays = try context.fetch(request)
+//        } catch {
+//            print("Error catching data from context \(error)")
+//        }
     }
   
     

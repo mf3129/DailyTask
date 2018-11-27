@@ -8,14 +8,18 @@
 
 import UIKit
 import CoreData
+import RealmSwift
 
 class DailyTaskController: UITableViewController {
     
-    var itemArray = [Item]()
-    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    var pendingItems: Results<Item>?
+    let realm = try! Realm()
+    
+    
+    // let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext | CORE DATA
     var selectedCategory : Category? {
         didSet{
-           // loadItems()
+            loadItems()
         }
     }
     
@@ -36,7 +40,7 @@ class DailyTaskController: UITableViewController {
     
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return itemArray.count
+        return pendingItems?.count ?? 1
     }
     
     
@@ -44,12 +48,15 @@ class DailyTaskController: UITableViewController {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "ItemListCell", for: indexPath)
         
-        let item = itemArray[indexPath.row]
-        
-        cell.textLabel?.text = item.title
-        
-        //Ternary Operator
-        cell.accessoryType = item.done == true ? .checkmark : .none
+        if let item = pendingItems?[indexPath.row] {
+            
+            cell.textLabel?.text = item.title
+            
+            //Ternary Operator
+            cell.accessoryType = item.done == true ? .checkmark : .none
+        } else {
+            cell.textLabel?.text = "No items added"
+        }
         
 //        if item.done == true {
 //            cell.accessoryType = .checkmark
@@ -68,9 +75,9 @@ class DailyTaskController: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         
-        itemArray[indexPath.row].done = !itemArray[indexPath.row].done
-        
-        saveItemData()
+//        pendingItems[indexPath.row].done = !pendingItems[indexPath.row].done
+//
+//        saveItemData()
         
 //        if itemArray[indexPath.row].done == false { //REPLACED THIS CODE WITH THE CODE ABOVE.
 //            itemArray[indexPath.row].done = true
@@ -95,15 +102,20 @@ class DailyTaskController: UITableViewController {
         let action = UIAlertAction(title: "Add Item", style: .default) { (action) in
             //To occur when the user clicks the add item button
             
+            if let currentCategory = self.selectedCategory {
+                do {
+                    try self.realm.write {
+                        let newItem = Item()
+                        newItem.title = textField.text!
+                        currentCategory.items.append(newItem)
+                    }
+                } catch {
+                    print("Error saving category \(error)")
+                }
+            }
             
-//            let newItem = Item(value: self.context)
-//            newItem.title = textField.text!
-//            newItem.parentCategory = self.selectedCategory
-//            newItem.done = false
-//            self.itemArray.append(newItem)
-//
-            self.saveItemData()
-
+            self.tableView.reloadData()
+            
         }
         
         
@@ -122,37 +134,40 @@ class DailyTaskController: UITableViewController {
     
     //MARK: - Manipulating the Model
     
-    func saveItemData() {
-        
-        do {
-            try context.save()
-        } catch {
-            print("Error saving context \(error)")
-        }
-        
-        self.tableView.reloadData()
-    }
-    
-//    func loadItems(with request: NSFetchRequest<Item> = Item.fetchRequest(), predicate : NSPredicate? = nil) {
+//    func saveItemData() {  | USED FOR CORE DATA
 //
-////        let categoryPredicate = NSPredicate(format: "parentCategory.name MATCHES %@", selectedCategory!.name!)
-////
-////        if let additionalPredicate = predicate {
-////            request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [categoryPredicate, additionalPredicate])
-////        } else {
-////            request.predicate = categoryPredicate
-////        }
-////
-////
-////        do {
-////            itemArray = try context.fetch(request)
-////        } catch {
-////            print("Error catching data from context \(error)")
-////        }
-////
-////        tableView.reloadData()
+//        do {
+//            try context.save()
+//        } catch {
+//            print("Error saving context \(error)")
+//        }
 //
+//        self.tableView.reloadData()
 //    }
+    
+    
+    func loadItems() {
+
+        pendingItems = selectedCategory?.items.sorted(byKeyPath: "title", ascending: true)
+        
+//        let categoryPredicate = NSPredicate(format: "parentCategory.name MATCHES %@", selectedCategory!.name!)
+//
+//        if let additionalPredicate = predicate {
+//            request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [categoryPredicate, additionalPredicate])
+//        } else {
+//            request.predicate = categoryPredicate
+//        }
+//
+//
+//        do {
+//            itemArray = try context.fetch(request)
+//        } catch {
+//            print("Error catching data from context \(error)")
+//        }
+
+        tableView.reloadData()
+
+    }
     
 
 }
