@@ -77,7 +77,8 @@ class DailyTaskController: UITableViewController {
         if let item = pendingItems?[indexPath.row] {
             do {
             try realm.write {
-                item.done = !item.done
+                realm.delete(item)
+                // item.done = !item.done
             }
         }   catch {
             print("Error saving done status, \(error)")
