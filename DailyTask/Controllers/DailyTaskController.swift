@@ -74,7 +74,18 @@ class DailyTaskController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        
+        if let item = pendingItems?[indexPath.row] {
+            do {
+            try realm.write {
+                item.done = !item.done
+            }
+        }   catch {
+            print("Error saving done status, \(error)")
+        }
+    }
+    
+        tableView.reloadData()
+    
 //        pendingItems[indexPath.row].done = !pendingItems[indexPath.row].done
 //
 //        saveItemData()
