@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		A80BAC8A21978C360060A6FC /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = A80BAC8921978C360060A6FC /* Item.swift */; };
 		A80BAC8C21978DC70060A6FC /* Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = A80BAC8B21978DC70060A6FC /* Category.swift */; };
+		A80BFEB821B62444009590F8 /* SwipeTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A80BFEB721B62444009590F8 /* SwipeTableViewController.swift */; };
 		A82E5A4E217FF5BB003088A1 /* CategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A82E5A4D217FF5BB003088A1 /* CategoryViewController.swift */; };
 		A8754FB42159BAB700735DF1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8754FB32159BAB700735DF1 /* AppDelegate.swift */; };
 		A8754FB62159BAB700735DF1 /* DailyTaskController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8754FB52159BAB700735DF1 /* DailyTaskController.swift */; };
@@ -22,6 +23,7 @@
 		377FDED2B81493B0BEAF3B25 /* Pods-DailyTask.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DailyTask.debug.xcconfig"; path = "Pods/Target Support Files/Pods-DailyTask/Pods-DailyTask.debug.xcconfig"; sourceTree = "<group>"; };
 		A80BAC8921978C360060A6FC /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
 		A80BAC8B21978DC70060A6FC /* Category.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Category.swift; sourceTree = "<group>"; };
+		A80BFEB721B62444009590F8 /* SwipeTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeTableViewController.swift; sourceTree = "<group>"; };
 		A82E5A4D217FF5BB003088A1 /* CategoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryViewController.swift; sourceTree = "<group>"; };
 		A8754FB02159BAB700735DF1 /* DailyTask.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DailyTask.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A8754FB32159BAB700735DF1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -68,6 +70,7 @@
 			isa = PBXGroup;
 			children = (
 				A82E5A4D217FF5BB003088A1 /* CategoryViewController.swift */,
+				A80BFEB721B62444009590F8 /* SwipeTableViewController.swift */,
 				A8754FB52159BAB700735DF1 /* DailyTaskController.swift */,
 			);
 			path = Controllers;
@@ -257,6 +260,7 @@
 				A82E5A4E217FF5BB003088A1 /* CategoryViewController.swift in Sources */,
 				A8754FB62159BAB700735DF1 /* DailyTaskController.swift in Sources */,
 				A8754FB42159BAB700735DF1 /* AppDelegate.swift in Sources */,
+				A80BFEB821B62444009590F8 /* SwipeTableViewController.swift in Sources */,
 				A80BAC8C21978DC70060A6FC /* Category.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
