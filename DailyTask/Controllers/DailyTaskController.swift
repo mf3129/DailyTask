@@ -176,8 +176,7 @@ class DailyTaskController: UITableViewController {
 //            itemArray = try context.fetch(request)
 //        } catch {
 //            print("Error catching data from context \(error)")
-//        }
-
+//        }-= 
         tableView.reloadData()
 
     }
