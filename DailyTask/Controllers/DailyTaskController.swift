@@ -7,10 +7,10 @@
 //
 
 import UIKit
-import CoreData
+//import CoreData
 import RealmSwift
 
-class DailyTaskController: UITableViewController {
+class DailyTaskController: SwipeTableViewController {
     
     var pendingItems: Results<Item>?
     let realm = try! Realm()
@@ -46,26 +46,24 @@ class DailyTaskController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: "ItemListCell", for: indexPath)
+        let cell = super.tableView(tableView, cellForRowAt: indexPath)
+            
+            //tableView.dequeueReusableCell(withIdentifier: "ItemListCell", for: indexPath)
         
         if let item = pendingItems?[indexPath.row] {
             
             cell.textLabel?.text = item.title
-            
             //Ternary Operator
             cell.accessoryType = item.done == true ? .checkmark : .none
         } else {
             cell.textLabel?.text = "No items added"
         }
-        
+        return cell
 //        if item.done == true {
 //            cell.accessoryType = .checkmark
 //        } else {
 //            cell.accessoryType = .none
 //        }
-        
-        return cell
-        
     }
 
     
@@ -77,8 +75,7 @@ class DailyTaskController: UITableViewController {
         if let item = pendingItems?[indexPath.row] {
             do {
             try realm.write {
-                realm.delete(item)
-                // item.done = !item.done
+                item.done = !item.done
             }
         }   catch {
             print("Error saving done status, \(error)")
@@ -131,13 +128,11 @@ class DailyTaskController: UITableViewController {
             
         }
         
-        
         alertMessage.addTextField { (alertTextField) in
             alertTextField.placeholder = "Add Item To List"
 //            print(alertTextField.text)
             textField = alertTextField
         }
-   
         
         alertMessage.addAction(action)
         
@@ -163,27 +158,40 @@ class DailyTaskController: UITableViewController {
 
         pendingItems = selectedCategory?.items.sorted(byKeyPath: "title", ascending: true)
         
-//        let categoryPredicate = NSPredicate(format: "parentCategory.name MATCHES %@", selectedCategory!.name!)
-//
-//        if let additionalPredicate = predicate {
-//            request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [categoryPredicate, additionalPredicate])
-//        } else {
-//            request.predicate = categoryPredicate
-//        }
-//
-//
-//        do {
-//            itemArray = try context.fetch(request)
-//        } catch {
-//            print("Error catching data from context \(error)")
-//        }-= 
+        
         tableView.reloadData()
-
+        
+        //        let categoryPredicate = NSPredicate(format: "parentCategory.name MATCHES %@", selectedCategory!.name!)
+        //
+        //        if let additionalPredicate = predicate {
+        //            request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [categoryPredicate, additionalPredicate])
+        //        } else {
+        //            request.predicate = categoryPredicate
+        //        }
+        //
+        //
+        //        do {
+        //            itemArray = try context.fetch(request)
+        //        } catch {
+        //            print("Error catching data from context \(error)")
+        //        }-=
+        
     }
     
-
+    override func updateModel(at indexPath: IndexPath) {
+        
+        if let item = pendingItems?[indexPath.row] {
+            do {
+                try! realm.write {
+                    realm.delete(item)
+                }
+            } catch {
+                print("Error deleting the category, \(error)")
+            }
+       }
+    }
+    
 }
-
 //MARK: - Search Bar Methods
 extension DailyTaskController: UISearchBarDelegate {
 

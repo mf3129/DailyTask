@@ -9,23 +9,26 @@
 import UIKit
 // import CoreData
 import RealmSwift
+import ChameleonFramework
 
-class CategoryViewController: SwipeTableViewController {
+
+
+class CategoryViewController:  SwipeTableViewController {
 
     let realm = try! Realm()
-    
-    
     var itemArrays: Results<Category>?
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         loadCategory()
-        tableView.rowHeight = 80.0
-
+        
+        tableView.separatorStyle = .none
     }
-
+    
+    
+    
+    
     
         //MARK: TableView Datasource Methods
     
@@ -37,11 +40,16 @@ class CategoryViewController: SwipeTableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = super.tableView(tableView, cellForRowAt: indexPath)
-        
+    
         cell.textLabel?.text = itemArrays?[indexPath.row].name ?? "No Categories Added Yet"
+        
+        cell.backgroundColor = UIColor(hexString: itemArrays?[indexPath.row].Color ?? "EB605A" )
         
         return cell
     }
+    
+    
+    
     
 //ADDING NEW ITEMS TO THE LIST
     
@@ -55,6 +63,7 @@ class CategoryViewController: SwipeTableViewController {
             
             let newItem = Category()
             newItem.name = textField.text!
+            newItem.Color = UIColor.randomFlat.hexValue()
             
             self.save(category: newItem)
             
