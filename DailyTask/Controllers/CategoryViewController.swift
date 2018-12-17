@@ -41,9 +41,15 @@ class CategoryViewController:  SwipeTableViewController {
         
         let cell = super.tableView(tableView, cellForRowAt: indexPath)
     
-        cell.textLabel?.text = itemArrays?[indexPath.row].name ?? "No Categories Added Yet"
+        if let category = itemArrays?[indexPath.row] {
+            
+            cell.textLabel?.text = category.name 
+            
+            cell.backgroundColor = UIColor(hexString: category.Color )
         
-        cell.backgroundColor = UIColor(hexString: itemArrays?[indexPath.row].Color ?? "EB605A" )
+        }
+        
+
         
         return cell
     }
@@ -110,6 +116,7 @@ class CategoryViewController:  SwipeTableViewController {
         
         self.tableView.reloadData()
     }
+    
     
     func loadCategory() {
         

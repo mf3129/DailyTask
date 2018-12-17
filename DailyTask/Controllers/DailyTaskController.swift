@@ -9,13 +9,13 @@
 import UIKit
 //import CoreData
 import RealmSwift
+import ChameleonFramework
 
 class DailyTaskController: SwipeTableViewController {
     
     var pendingItems: Results<Item>?
     let realm = try! Realm()
-    
-    
+
     // let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext | CORE DATA
     var selectedCategory : Category? {
         didSet{
@@ -29,6 +29,7 @@ class DailyTaskController: SwipeTableViewController {
         
         print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
         
+        tableView.separatorStyle = .none
 //        if let items = defaults.array(forKey: "itemArrayList") as? [Item] {
 //            itemArray = items
 //        }
@@ -53,8 +54,18 @@ class DailyTaskController: SwipeTableViewController {
         if let item = pendingItems?[indexPath.row] {
             
             cell.textLabel?.text = item.title
+            
+    
+            let previousColor =  UIColor(hexString: (selectedCategory?.Color)!)
+            // let chosenColor = UIColor(named: (selectedCategory?.Color)!)
+            
+            if let Color = previousColor!.darken(byPercentage: CGFloat(indexPath.row) / CGFloat(pendingItems!.count)) {
+                 cell.backgroundColor = Color
+                 cell.textLabel?.textColor = ContrastColorOf(Color, returnFlat: true)
+            }
             //Ternary Operator
             cell.accessoryType = item.done == true ? .checkmark : .none
+            
         } else {
             cell.textLabel?.text = "No items added"
         }
@@ -157,7 +168,7 @@ class DailyTaskController: SwipeTableViewController {
     func loadItems() {
 
         pendingItems = selectedCategory?.items.sorted(byKeyPath: "title", ascending: true)
-        
+
         
         tableView.reloadData()
         
